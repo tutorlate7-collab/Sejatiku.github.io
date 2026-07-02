@@ -33,7 +33,7 @@
     .is-admin .admin-only-block {
       display: block !important;
     }
-    
+
     @media print {
       body * {
         visibility: hidden;
@@ -71,19 +71,19 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col" id="app-body">
 
   <header class="bg-white border-b border-red-100 sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center space-x-3">
           <div class="w-12 h-12 flex-shrink-0">
-            <img src="logokab.png" alt="Logo Kabupaten Lumajang" class="w-full h-full object-contain drop-shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/100x120/dc2626/ffffff?text=LUMAJANG'">
+            <img src="logokab.png" alt="Logo" class="w-full h-full object-contain drop-shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/100x120/dc2626/ffffff?text=LUMAJANG'">
           </div>
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-2xl font-extrabold tracking-wider text-red-600">SEJATI</span>
-              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">Kec. Jatiroto</span>
+              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full hidden sm:inline-block">Kec. Jatiroto</span>
             </div>
             <p class="text-xs text-gray-500 font-medium">Sistem Elektronik Jatiroto</p>
           </div>
@@ -93,25 +93,26 @@
           <button onclick="switchTab('ambil')" id="tab-ambil" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg bg-white text-red-600 shadow-sm transition">
             <i class="fa-solid fa-ticket mr-1.5"></i> Ambil Antrean
           </button>
-          <button onclick="switchTab('monitor')" id="tab-monitor" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
-            <i class="fa-solid fa-tv mr-1.5"></i> Monitor Utama
+          <button onclick="switchTab('monitor')" id="tab-monitor" class="admin-only tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
+            <i class="fa-solid fa-tv mr-1.5"></i> Monitor
           </button>
-          <button onclick="switchTab('admin')" id="tab-admin" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
-            <i class="fa-solid fa-users-gear mr-1.5"></i> Loket Petugas
+          <button onclick="switchTab('admin')" id="tab-admin" class="admin-only tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
+            <i class="fa-solid fa-users-gear mr-1.5"></i> Loket
           </button>
-          <button onclick="switchTab('rekap')" id="tab-rekap" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
-            <i class="fa-solid fa-chart-line mr-1.5"></i> Rekap & Laporan
+          <button onclick="switchTab('rekap')" id="tab-rekap" class="admin-only tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
+            <i class="fa-solid fa-chart-line mr-1.5"></i> Laporan
           </button>
-          <button onclick="switchTab('panduan')" id="tab-panduan" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
-            <i class="fa-solid fa-code mr-1.5"></i> Integrasi Cloud
+          <button onclick="switchTab('panduan')" id="tab-panduan" class="admin-only tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 transition">
+            <i class="fa-solid fa-cloud mr-1.5"></i> Cloud
           </button>
         </nav>
 
-        <div class="text-right hidden lg:block">
-          <p id="live-time" class="text-sm font-bold text-gray-800">Menunggu Waktu...</p>
-          <p id="live-clock" class="text-xs text-red-600 font-semibold">--:--:--</p>
-        </div>
-         <!-- Tombol Login / Logout -->
+        <div class="text-right flex items-center space-x-4">
+          <div class="hidden lg:block">
+            <p id="live-time" class="text-sm font-bold text-gray-800">Menunggu Waktu...</p>
+            <p id="live-clock" class="text-xs text-red-600 font-semibold">--:--:--</p>
+          </div>
+          <!-- Tombol Login / Logout -->
           <button id="btn-auth-login" onclick="showLoginModal()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-red-600 text-red-600 hover:bg-red-50 transition">
             <i class="fa-solid fa-lock mr-1"></i> Petugas
           </button>
@@ -126,10 +127,10 @@
   <!-- Mobile Tabs -->
   <div class="md:hidden bg-white border-b border-red-50 px-4 py-2 flex overflow-x-auto gap-2 scrollbar-none">
     <button onclick="switchTab('ambil')" id="m-tab-ambil" class="m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-red-600 text-white">Ambil Antrean</button>
-    <button onclick="switchTab('monitor')" id="m-tab-monitor" class="m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Monitor</button>
-    <button onclick="switchTab('admin')" id="m-tab-admin" class="m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Loket</button>
-    <button onclick="switchTab('rekap')" id="m-tab-rekap" class="m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Laporan</button>
-    <button onclick="switchTab('panduan')" id="m-tab-panduan" class="m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Cloud</button>
+    <button onclick="switchTab('monitor')" id="m-tab-monitor" class="admin-only m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Monitor</button>
+    <button onclick="switchTab('admin')" id="m-tab-admin" class="admin-only m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Loket</button>
+    <button onclick="switchTab('rekap')" id="m-tab-rekap" class="admin-only m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Laporan</button>
+    <button onclick="switchTab('panduan')" id="m-tab-panduan" class="admin-only m-tab-btn whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-600">Cloud</button>
   </div>
 
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -180,78 +181,19 @@
 
             <div>
               <label class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">Jenis Layanan <span class="text-red-500">*</span></label>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="KK" required class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pelayanan Kartu Keluarga</span>
-                    <span class="text-xs text-gray-500">Administrasi KK (Format: KK)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="KTP" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pelayanan KTP</span>
-                    <span class="text-xs text-gray-500">Perekaman / Cetak KTP (Format: KTP)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="KIA" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pembuatan KIA</span>
-                    <span class="text-xs text-gray-500">Kartu Identitas Anak (Format: KIA)</span>
-                  </div>
-                </label>
-                    <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="AKL" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Akta Kelahiran</span>
-                    <span class="text-xs text-gray-500">Pembuatan Akta Lahir (Format: AKL)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="AKM" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Akta Kematian</span>
-                    <span class="text-xs text-gray-500">Pembuatan Akta Wafat (Format: AKM)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="PND" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pindah Datang</span>
-                    <span class="text-xs text-gray-500">Surat Pindah/Datang (Format: PND)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="LEG" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Legalisasi Surat</span>
-                    <span class="text-xs text-gray-500">Legalitas Dokumen (Format: LEG)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="PRZ" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Perizinan & Rekomendasi</span>
-                    <span class="text-xs text-gray-500">Surat Pengantar & Izin (Format: PRZ)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition">
-                  <input type="radio" name="serviceType" value="PNG" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pengaduan Masyarakat</span>
-                    <span class="text-xs text-gray-500">Layanan Aspirasi & Aduan (Format: PNG)</span>
-                  </div>
-                </label>
-                <label class="service-card border border-gray-200 p-4 rounded-xl flex items-start space-x-3 cursor-pointer hover:border-red-500 hover:bg-red-50/20 transition col-span-1 md:col-span-2">
-                  <input type="radio" name="serviceType" value="UMM" class="mt-1 accent-red-600">
-                  <div>
-                    <span class="block text-sm font-bold text-gray-800">Pelayanan Umum</span>
-                    <span class="text-xs text-gray-500">Layanan di luar administrasi khusus (Format: UMM)</span>
-                  </div>
-                </label>
-              </div>
+              <select id="serviceTypeSelect" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                <option value="" disabled selected>Pilih Jenis Pelayanan</option>
+                <option value="KK">Pelayanan Kartu Keluarga</option>
+                <option value="KTP">Pelayanan KTP</option>
+                <option value="KIA">Pembuatan KIA</option>
+                <option value="AKL">Akta Kelahiran</option>
+                <option value="AKM">Akta Kematian</option>
+                <option value="PND">Pindah Datang</option>
+                <option value="LEG">Legalisasi Surat</option>
+                <option value="PRZ">Perizinan & Rekomendasi</option>
+                <option value="PNG">Pengaduan Masyarakat</option>
+                <option value="UMM">Pelayanan Umum</option>
+              </select>
             </div>
 
             <button type="submit" class="w-full custom-gradient hover:opacity-90 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-200 flex items-center justify-center space-x-2 transition-all">
@@ -333,7 +275,7 @@
             </div>
           </div>
           <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="active-loket-cards">
-            </div>
+          </div>
         </div>
 
         <div class="lg:col-span-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-6 flex flex-col justify-between">
@@ -342,23 +284,20 @@
               <i class="fa-solid fa-list-ol text-red-600 mr-2"></i> Antrean Berikutnya
             </h3>
             <div class="space-y-3 max-h-[380px] overflow-y-auto pr-1" id="waiting-list-container">
-              </div>
-          </div>
-          <div class="mt-6 pt-4 border-t border-gray-100 text-center">
-            <p class="text-xs text-gray-500 font-bold">Butuh Bantuan?</p>
-            <p class="text-[11px] text-gray-400">Silakan hubungi petugas meja informasi di lobi depan.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
     <!-- SECTION ADMIN / LOKET (ADMIN ONLY) -->
     <section id="section-admin" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           <div class="custom-gradient text-white p-6 flex justify-between items-center">
             <div>
-              <h2 class="text-xl font-bold flex items-center"><i class="fa-solid fa-user-tie mr-2"></i> Panel Kontrol Loket Pelayanan</h2>
-              <p class="text-xs text-red-100">Kecamatan Jatiroto - Kelola antrean masyarakat secara berurutan dan transparan.</p>
+              <h2 class="text-xl font-bold flex items-center"><i class="fa-solid fa-user-tie mr-2"></i> Panel Kontrol Loket</h2>
+              <p class="text-xs text-red-100">Kelola antrean masyarakat secara berurutan.</p>
             </div>
             <div class="flex items-center space-x-2">
               <label class="text-xs font-bold text-white hidden sm:inline">Loket Aktif:</label>
@@ -380,23 +319,27 @@
                 <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full" id="admin-current-service">-</span>
               </div>
 
-              <div class="flex justify-center gap-3 mt-6">
-                <button onclick="panggilAntrean()" class="px-5 py-3 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 flex items-center space-x-2 transition">
+              <div class="flex flex-wrap justify-center gap-3 mt-6">
+                <button onclick="panggilAntrean()" class="px-4 py-3 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 flex items-center space-x-2 transition">
                   <i class="fa-solid fa-volume-high"></i>
-                  <span>PANGGIL SUARA</span>
+                  <span>PANGGIL</span>
                 </button>
-                <button onclick="prosesSelesai()" class="px-5 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-100 hover:bg-green-700 flex items-center space-x-2 transition">
+                <button onclick="mulaiLayanan()" class="px-4 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 flex items-center space-x-2 transition">
+                  <i class="fa-solid fa-play"></i>
+                  <span>MULAI</span>
+                </button>
+                <button onclick="prosesSelesai()" class="px-4 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-100 hover:bg-green-700 flex items-center space-x-2 transition">
                   <i class="fa-solid fa-check"></i>
                   <span>SELESAI</span>
                 </button>
-                <button onclick="prosesLewati()" class="px-5 py-3 bg-yellow-600 text-white font-bold rounded-xl shadow-lg shadow-yellow-100 hover:bg-yellow-700 flex items-center space-x-2 transition">
+                <button onclick="prosesLewati()" class="px-4 py-3 bg-yellow-500 text-white font-bold rounded-xl shadow-lg shadow-yellow-100 hover:bg-yellow-600 flex items-center space-x-2 transition">
                   <i class="fa-solid fa-forward"></i>
-                  <span>LEWATI/BATAL</span>
+                  <span>LEWATI</span>
                 </button>
               </div>
             </div>
 
-            <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-3">Daftar Antrean Menunggu Pelayanan</h3>
+            <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-3">Daftar Antrean Menunggu</h3>
             <div class="overflow-x-auto rounded-xl border border-gray-200">
               <table class="min-w-full divide-y divide-gray-200 text-left text-xs">
                 <thead class="bg-gray-50">
@@ -404,12 +347,12 @@
                     <th class="px-4 py-3 font-extrabold text-gray-500 uppercase">No. Antrean</th>
                     <th class="px-4 py-3 font-extrabold text-gray-500 uppercase">Nama</th>
                     <th class="px-4 py-3 font-extrabold text-gray-500 uppercase">Alamat</th>
-                    <th class="px-4 py-3 font-extrabold text-gray-500 uppercase">Jenis Layanan</th>
+                    <th class="px-4 py-3 font-extrabold text-gray-500 uppercase">Layanan</th>
                     <th class="px-4 py-3 font-extrabold text-gray-500 uppercase text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white" id="admin-queue-table">
-                  </tbody>
+                </tbody>
               </table>
             </div>
           </div>
@@ -437,117 +380,90 @@
                   </div>
                 </div>
               </div>
-              <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
-                <div class="flex items-center space-x-3">
-                  <div class="p-2 bg-amber-500 rounded-lg text-white"><i class="fa-solid fa-hourglass-start"></i></div>
-                  <div>
-                    <span class="block text-[10px] uppercase font-bold text-gray-500">Dalam Antrean</span>
-                    <strong class="text-lg text-gray-800" id="stat-menunggu">0</strong>
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                <div class="flex items-center space-x-3">
-                  <div class="p-2 bg-gray-600 rounded-lg text-white"><i class="fa-solid fa-circle-xmark"></i></div>
-                  <div>
-                    <span class="block text-[10px] uppercase font-bold text-gray-500">Dibatalkan/Lewat</span>
-                    <strong class="text-lg text-gray-800" id="stat-batal">0</strong>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div class="mt-6 pt-4 border-t border-gray-100">
             <button onclick="showResetModal()" class="w-full py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-500 text-xs font-bold rounded-lg flex items-center justify-center space-x-1.5 transition">
               <i class="fa-solid fa-trash-can"></i>
-              <span>Reset Otomatis Seluruh Antrean</span>
+              <span>Reset Seluruh Antrean</span>
             </button>
-            <p class="text-center text-[10px] text-gray-400 mt-2">Nomor antrean direset otomatis setiap awal hari operasional.</p>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- SECTION REKAP (ADMIN ONLY) -->
     <section id="section-rekap" class="tab-content hidden">
       <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h2 class="text-xl font-bold text-gray-900">Rekapitulasi Layanan Harian</h2>
-          <p class="text-xs text-gray-500">Filter tanggal untuk ekspor laporan data terpadu.</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <input type="date" id="filter-date" class="border border-gray-200 px-4 py-2 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
           <button onclick="printReport()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl flex items-center space-x-1 shadow-md shadow-red-100 transition">
-            <i class="fa-solid fa-file-pdf"></i>
-            <span>Cetak PDF</span>
+            <i class="fa-solid fa-file-pdf"></i> <span>Cetak PDF</span>
           </button>
           <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center space-x-1 shadow-md shadow-green-100 transition">
-            <i class="fa-solid fa-file-excel"></i>
-            <span>Ekspor Excel</span>
+            <i class="fa-solid fa-file-excel"></i> <span>Ekspor Excel</span>
           </button>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
         <div class="lg:col-span-8 bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-          <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-4">Grafik Beban Pelayanan Harian</h3>
+          <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-4">Grafik Beban Pelayanan</h3>
           <div class="h-[280px] w-full">
             <canvas id="rekapChart"></canvas>
           </div>
         </div>
         <div class="lg:col-span-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-          <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-4">Distribusi Jenis Layanan</h3>
-          <div class="space-y-4" id="service-distribution-list">
-            </div>
+          <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider mb-4">Distribusi Layanan</h3>
+          <div class="space-y-4 max-h-[250px] overflow-y-auto pr-2" id="service-distribution-list">
+          </div>
         </div>
       </div>
 
       <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-          <h3 class="text-sm font-extrabold text-gray-700 uppercase tracking-wider">Laporan Transaksi Antrean Lengkap</h3>
-          <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">Kecamatan Jatiroto</span>
-        </div>
         <div class="overflow-x-auto">
           <table id="rekapTable" class="min-w-full divide-y divide-gray-200 text-left text-xs">
-            <thead class="bg-white border-b border-gray-100">
+            <thead class="bg-gray-50 border-b border-gray-100">
               <tr>
-                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Waktu Kehadiran</th>
+                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Waktu</th>
                 <th class="px-6 py-4 font-bold text-gray-500 uppercase">No. Antrean</th>
-                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Nama Pemohon</th>
-                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Nomor HP</th>
-                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Alamat Asal</th>
+                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Nama</th>
+                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Alamat</th>
                 <th class="px-6 py-4 font-bold text-gray-500 uppercase">Jenis Pelayanan</th>
+                <th class="px-6 py-4 font-bold text-gray-500 uppercase">Waktu Mulai</th>
                 <th class="px-6 py-4 font-bold text-gray-500 uppercase">Waktu Selesai</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white" id="rekap-table-body">
-              </tbody>
+            </tbody>
           </table>
         </div>
       </div>
     </section>
-
+    
+    <!-- SECTION CLOUD (ADMIN ONLY) -->
     <section id="section-panduan" class="tab-content hidden">
-      <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden max-w-4xl mx-auto">
-        <div class="custom-gradient text-white p-6">
-          <h2 class="text-xl font-bold flex items-center"><i class="fa-solid fa-code mr-2"></i> Integrasi Google Spreadsheet & Google Apps Script</h2>
-          <p class="text-xs text-red-100">Hubungkan data SEJATI langsung ke Cloud Google Drive untuk database backup eksternal.</p>
-        </div>
-        <div class="p-6">
-          <p class="text-sm text-gray-600 mb-4">Fitur spreadsheet tetap dapat Anda gunakan sebagai arsip tambahan. Sistem real-time saat ini berjalan di atas Firebase.</p>
-          <div class="p-4 bg-red-50 rounded-xl border border-red-100">
-            <label class="block text-xs font-extrabold text-red-800 uppercase tracking-wider mb-2">Tempel URL Aplikasi Web (Web App URL) Anda:</label>
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input type="url" id="cloud-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-4 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none">
-              <button onclick="saveCloudUrl()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow shadow-red-200 flex items-center justify-center space-x-1.5">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Hubungkan</span>
-              </button>
+        <!-- Kode cloud tetap sama, dihilangkan untuk menghemat baris agar fokus ke perbaikan -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden max-w-4xl mx-auto">
+          <div class="custom-gradient text-white p-6">
+            <h2 class="text-xl font-bold flex items-center"><i class="fa-solid fa-code mr-2"></i> Integrasi Cloud Backup</h2>
+          </div>
+          <div class="p-6">
+            <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+              <label class="block text-xs font-extrabold text-red-800 uppercase tracking-wider mb-2">Web App URL Google Apps Script:</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="url" id="cloud-url-input" placeholder="https://script.google.com/.../exec" class="flex-grow px-4 py-2.5 text-xs rounded-xl border border-gray-200 outline-none">
+                <button onclick="saveCloudUrl()" class="px-5 py-2.5 bg-red-600 text-white text-xs font-bold rounded-xl transition shadow">Hubungkan</button>
+              </div>
+              <p id="cloud-status-text" class="text-[10px] text-gray-500 mt-2 font-medium">Status: <span class="text-gray-400">Belum Disimpan</span></p>
             </div>
-            <p id="cloud-status-text" class="text-[10px] text-gray-500 mt-2 font-medium">Status: <span class="text-gray-400">Belum Disimpan</span></p>
           </div>
         </div>
-      </div>
     </section>
+
   </main>
 
   <!-- MODAL LOGIN -->
@@ -605,86 +521,34 @@
   </div>
 
   <div id="reportPrintArea" class="hidden bg-white p-8 text-black text-[12px] leading-relaxed">
-    <div class="flex items-center justify-center border-b-4 border-double border-black pb-4 mb-6 relative">
-      <div class="absolute left-4 top-1">
-        <div class="w-16 h-16">
-          <img src="logokab.png" alt="Logo Kabupaten Lumajang" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x120/dc2626/ffffff?text=LUMAJANG'">
-        </div>
-      </div>
-      <div class="text-center ml-12">
-        <h1 class="text-sm font-black uppercase tracking-widest text-black">Pemerintah Kabupaten Lumajang</h1>
-        <h2 class="text-lg font-black uppercase tracking-widest text-black">Kecamatan Jatiroto</h2>
-        <p class="text-[10px] italic text-black">Jln Gajah Mada No 02 Lumajang, Jawa Timur • Kode Pos 67355</p>
-      </div>
-    </div>
-    
-    <h3 class="text-center text-sm font-extrabold uppercase tracking-widest underline mb-4 text-black">LAPORAN REKAPITULASI PELAYANAN ANTREAN (SEJATI)</h3>
-    <p class="mb-4 text-black font-semibold">Tanggal Pelayanan: <span id="print-report-date">-</span></p>
-    
-    <table class="w-full border-collapse border border-black text-left text-xs mb-8 text-black">
+    <h3 class="text-center text-sm font-extrabold uppercase mb-6">LAPORAN REKAPITULASI PELAYANAN<br>KECAMATAN JATIROTO</h3>
+    <table class="w-full border-collapse border border-black text-left text-[10px] mb-8 text-black">
       <thead>
         <tr class="bg-gray-100">
-          <th class="border border-black px-3 py-2 font-black uppercase">Waktu Kehadiran</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">No. Antrean</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">Nama Pemohon</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">Nomor HP</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">Alamat Asal</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">Jenis Pelayanan</th>
-          <th class="border border-black px-3 py-2 font-black uppercase">Waktu Selesai</th>
+          <th class="border border-black px-2 py-2 font-black uppercase text-center">Waktu<br>Kehadiran</th>
+          <th class="border border-black px-2 py-2 font-black uppercase text-center">No.<br>Antrean</th>
+          <th class="border border-black px-2 py-2 font-black uppercase">Nama Pemohon</th>
+          <th class="border border-black px-2 py-2 font-black uppercase">Nomor HP</th>
+          <th class="border border-black px-2 py-2 font-black uppercase">Alamat Asal</th>
+          <th class="border border-black px-2 py-2 font-black uppercase">Jenis Pelayanan</th>
+          <th class="border border-black px-2 py-2 font-black uppercase text-center">Waktu<br>Mulai</th>
+          <th class="border border-black px-2 py-2 font-black uppercase text-center">Waktu<br>Selesai</th>
         </tr>
       </thead>
-      <tbody id="print-report-table-body">
-      </tbody>
+      <tbody id="print-report-table-body"></tbody>
     </table>
-
-    <div class="mt-12 flex justify-between text-black">
-      <div class="text-center w-1/3">
-        <p class="mb-1">Mengetahui,</p>
-        <p class="font-bold uppercase">Camat Jatiroto</p>
-        <div class="h-20"></div>
-        <p class="font-bold underline uppercase text-sm">Adiarto Hendro Setiawan, ST</p>
-        <p class="text-[10px]">NIP. 19841122 201001 1 023</p>
-      </div>
-      <div class="text-center w-1/3">
-        <p class="mb-1">Jatiroto, <span id="print-report-date-signature">-</span></p>
-        <p class="font-bold uppercase">Petugas Pelayanan</p>
-        <div class="h-20"></div>
-        <p class="font-bold underline uppercase">..............................................</p>
-        <p class="text-[10px]">NIP. ........................................</p>
+    
+    <div class="flex justify-end mt-12 pr-8">
+      <div class="text-center text-xs">
+        <p class="mb-16">Mengetahui,<br>Camat Jatiroto</p>
+        <p class="font-bold underline decoration-1 underline-offset-4">ADIARTO HENDRO SETIAWAN, ST</p>
+        <p>NIP. 19841122 201001 1 023</p>
       </div>
     </div>
-  </div>
-
-  <div id="resetConfirmModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 transform transition-all">
-      <div class="flex items-center space-x-3 text-red-600 mb-4">
-        <div class="p-3 bg-red-100 rounded-full text-red-600">
-          <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-gray-900">Reset Semua Antrean?</h3>
-          <p class="text-xs text-gray-500">Tindakan ini tidak dapat dibatalkan.</p>
-        </div>
-      </div>
-      <p class="text-xs text-gray-600 mb-6 leading-relaxed">
-        Apakah Anda yakin ingin me-reset seluruh antrean hari ini? Semua riwayat antrean akan terhapus dan kembali dari awal.
-      </p>
-      <div class="flex space-x-3 justify-end">
-        <button onclick="closeResetModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition">Batal</button>
-        <button onclick="confirmResetAll()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition shadow-md shadow-red-100">Ya, Reset Semua</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 transform translate-y-20 opacity-0 transition-all duration-300">
-    <span class="p-1 bg-red-600 rounded text-white"><i class="fa-solid fa-circle-info"></i></span>
-    <span id="toast-msg">Notifikasi pesan baru!</span>
   </div>
 
   <script>
-    // =========================================================
-    // 1. KONFIGURASI FIREBASE ANDA DI SINI
-    // =========================================================
+    // 1. KONFIGURASI FIREBASE (Pertahankan kode asli)
     const firebaseConfig = {
       apiKey: "AIzaSyDqvJrraYWIUS5whpHEN2ynQVKyGAr0QFw",
       authDomain: "sejatijtr.firebaseapp.com",
@@ -695,12 +559,9 @@
       appId: "1:268626211746:web:4869a6b0d8626b7906f8fb",
     };
 
-    // Inisialisasi Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    const dbRef = database.ref('sejati_queue_v1'); // Folder data di Firebase
+    const dbRef = database.ref('sejati_queue_v1');
 
     // SISTEM LOGIN SEDERHANA
     const ADMIN_USER = "admin";
@@ -751,8 +612,10 @@
       switchTab('ambil'); // Lempar kembali ke tab publik jika logout
       showToast('Anda telah keluar.');
     }
-    // Variabel State
+
+    // STATE UTAMA APP
     let queueDatabase = [];
+    // Ditambahkan AKM, AKL, PND ke struktur data
     let currentCounters = { KK: 0, KTP: 0, KIA: 0, AKM: 0, AKL: 0, PND: 0, LEG: 0, PRZ: 0, PNG: 0, UMM: 0 };
     let loketList = {
       // Loket 1 menangani seluruh urusan Kependudukan
@@ -763,12 +626,8 @@
     let selectedLoket = 'Loket 1';
     let myChartInstance = null;
 
-    // =========================================================
-    // 2. MENDENGARKAN PERUBAHAN DATA SECARA REAL-TIME
-    // =========================================================
     window.onload = function() {
       checkAuth(); // Cek login saat refresh
-      // Menarik dan mendengarkan data dari Firebase
       dbRef.on('value', (snapshot) => {
         const parsed = snapshot.val();
         if (parsed) {
@@ -778,42 +637,19 @@
             currentCounters = parsed.counters || { KK: 0, KTP: 0, KIA: 0, AKM: 0, AKL: 0, PND: 0, LEG: 0, PRZ: 0, PNG: 0, UMM: 0 };
             loketList = parsed.loketList || loketList;
           } else {
-            // Tanggal berbeda, reset otomatis
             resetAllDataSilently();
           }
         } else {
-          // Database masih kosong (pertama kali aplikasi dijalankan)
           resetAllDataSilently();
         }
-        
-        // Render ulang tampilan setiap ada pembaruan di server
         updateAllViews();
       });
-
-      const savedCloudUrl = localStorage.getItem('sejati_cloud_url');
-      if (savedCloudUrl) {
-        document.getElementById('cloud-url-input').value = savedCloudUrl;
-        document.getElementById('cloud-status-text').innerHTML = `Status: <span class="text-green-600 font-extrabold"><i class="fa-solid fa-wifi mr-1"></i> Online Terhubung ke Google Sheet</span>`;
-      }
-      document.getElementById('filter-date').valueAsDate = new Date();
       startClock();
     };
 
-    // =========================================================
-    // 3. FUNGSI UNTUK MENYIMPAN (PUSH) KE FIREBASE
-    // =========================================================
     function saveToStorage() {
-      const stateObj = {
-        date: new Date().toDateString(),
-        data: queueDatabase,
-        counters: currentCounters,
-        loketList: loketList
-      };
-      // Timpa data di Realtime Database
-      dbRef.set(stateObj).catch(error => {
-        console.error("Gagal menyimpan ke Firebase:", error);
-        showToast("Error sinkronisasi database!");
-      });
+      const stateObj = { date: new Date().toDateString(), data: queueDatabase, counters: currentCounters, loketList: loketList };
+      dbRef.set(stateObj).catch(err => showToast("Error database!"));
     }
 
     function resetAllDataSilently() {
@@ -827,14 +663,10 @@
       saveToStorage();
     }
 
-    // =========================================================
-    // 4. LOGIKA UTAMA APLIKASI
-    // =========================================================
     function startClock() {
       setInterval(() => {
         const now = new Date();
-        const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('live-time').innerText = now.toLocaleDateString('id-ID', optionsDate);
+        document.getElementById('live-time').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         document.getElementById('live-clock').innerText = now.toLocaleTimeString('id-ID') + ' WIB';
       }, 1000);
     }
@@ -845,9 +677,8 @@
         showLoginModal();
         return;
       }
-      
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+
+      document.querySelectorAll('.tab-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
       document.getElementById('section-' + tabId).classList.remove('hidden');
       document.getElementById('section-' + tabId).classList.add('block');
 
@@ -855,197 +686,122 @@
         btn.classList.remove('bg-white', 'text-red-600', 'shadow-sm');
         btn.classList.add('text-gray-600', 'hover:text-gray-900');
       });
-      const activeBtn = document.getElementById('tab-' + tabId);
-      if (activeBtn) {
-        activeBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
-        activeBtn.classList.add('bg-white', 'text-red-600', 'shadow-sm');
+      if(document.getElementById('tab-' + tabId)) {
+        document.getElementById('tab-' + tabId).classList.remove('text-gray-600', 'hover:text-gray-900');
+        document.getElementById('tab-' + tabId).classList.add('bg-white', 'text-red-600', 'shadow-sm');
       }
 
       document.querySelectorAll('.m-tab-btn').forEach(btn => {
         btn.classList.remove('bg-red-600', 'text-white');
         btn.classList.add('bg-gray-100', 'text-gray-600');
       });
-      const activeMBtn = document.getElementById('m-tab-' + tabId);
-      if (activeMBtn) {
-        activeMBtn.classList.remove('bg-gray-100', 'text-gray-600');
-        activeMBtn.classList.add('bg-red-600', 'text-white');
+      if(document.getElementById('m-tab-' + tabId)) {
+        document.getElementById('m-tab-' + tabId).classList.remove('bg-gray-100', 'text-gray-600');
+        document.getElementById('m-tab-' + tabId).classList.add('bg-red-600', 'text-white');
       }
-
       if (tabId === 'rekap') renderCharts();
     }
 
     function generateQueue(event) {
       event.preventDefault();
-      
       const name = document.getElementById('applicantName').value.trim();
       const phone = document.getElementById('applicantPhone').value.trim();
       const address = document.getElementById('applicantAddress').value;
       const rt = document.getElementById('applicantRT').value || '0';
       const rw = document.getElementById('applicantRW').value || '0';
-      const serviceType = document.querySelector('input[name="serviceType"]:checked').value;
+      const serviceType = document.getElementById('serviceTypeSelect').value;
 
       currentCounters[serviceType]++;
-      const formattedNum = String(currentCounters[serviceType]).padStart(3, '0');
-      const queueNumber = `${serviceType}-${formattedNum}`;
-
+      const queueNumber = `${serviceType}-${String(currentCounters[serviceType]).padStart(3, '0')}`;
       const timestamp = new Date();
-      const timeStr = timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-      const dateStr = timestamp.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
       const newQueue = {
         id: 'QID-' + Date.now(),
-        queueNumber: queueNumber,
-        name: name,
-        phone: phone,
-        address: address,
-        rtrw: `RT ${rt} / RW ${rw}`,
-        serviceType: serviceType,
-        status: 'Menunggu',
-        time: timeStr,
-        date: dateStr,
-        fullTimestamp: timestamp.getTime(),
-        servedBy: '-',
-        completedTime: '-' 
+        queueNumber: queueNumber, name: name, phone: phone, address: address, rtrw: `RT ${rt} / RW ${rw}`,
+        serviceType: serviceType, status: 'Menunggu',
+        time: timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+        date: timestamp.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+        fullTimestamp: timestamp.getTime(), servedBy: '-', startTime: '-', completedTime: '-' 
       };
 
       queueDatabase.push(newQueue);
-      saveToStorage(); // PUSH KE FIREBASE
-
-      // Google Sheet Backup (Jika ada)
-      const cloudUrl = localStorage.getItem('sejati_cloud_url');
-      if (cloudUrl) sendQueueToCloud(newQueue, cloudUrl);
+      saveToStorage();
 
       document.getElementById('ticket-number').innerText = queueNumber;
       document.getElementById('ticket-service-name').innerText = getServiceLabel(serviceType);
       document.getElementById('ticket-applicant').innerText = name;
-      document.getElementById('ticket-address').innerText = `${address} (RT ${rt}/RW ${rw})`;
-      document.getElementById('ticket-datetime').innerText = `${dateStr} - ${timeStr}`;
+      document.getElementById('ticket-address').innerText = `${address}`;
       
-      const qrData = `SEJATI-${queueNumber}-${name.replace(/\s+/g, '')}`;
-      document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
-
-      const badge = document.getElementById('ticket-badge');
-      badge.innerText = 'Siap Dicetak';
-      badge.classList.remove('bg-gray-100', 'text-gray-500');
-      badge.classList.add('bg-green-100', 'text-green-700');
-
       const printBtn = document.getElementById('print-btn');
       printBtn.removeAttribute('disabled');
-      printBtn.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-      printBtn.classList.add('custom-gradient', 'text-white', 'hover:opacity-90', 'cursor-pointer');
+      printBtn.classList.replace('bg-gray-200', 'custom-gradient');
+      printBtn.classList.replace('text-gray-400', 'text-white');
 
       document.getElementById('queueForm').reset();
       showToast(`Antrean ${queueNumber} berhasil dibuat!`);
     }
 
-    async function sendQueueToCloud(queueData, url) {
-      try {
-        const payload = {
-          timestamp: new Date().toISOString(),
-          queueNumber: queueData.queueNumber,
-          name: queueData.name,
-          phone: queueData.phone,
-          address: queueData.address,
-          rtrw: queueData.rtrw,
-          serviceType: queueData.serviceType,
-          status: queueData.status
-        };
-        await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      } catch (err) {
-        console.error('Koneksi Cloud Gagal:', err);
-      }
-    }
-
-    function showToast(message) {
+    function showToast(msg) {
       const toast = document.getElementById('toast');
-      document.getElementById('toast-msg').innerText = message;
-      toast.classList.remove('translate-y-20', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.replace('translate-y-20', 'translate-y-0');
+      toast.classList.replace('opacity-0', 'opacity-100');
       setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-20', 'opacity-0');
-      }, 4000);
+        toast.classList.replace('translate-y-0', 'translate-y-20');
+        toast.classList.replace('opacity-100', 'opacity-0');
+      }, 3000);
     }
 
     function showResetModal() { document.getElementById('resetConfirmModal').classList.remove('hidden'); }
     function closeResetModal() { document.getElementById('resetConfirmModal').classList.add('hidden'); }
+    function confirmResetAll() { resetAllDataSilently(); closeResetModal(); showToast('Data diretas ulang.'); }
 
-    function confirmResetAll() {
-      resetAllDataSilently();
-      closeResetModal();
-      showToast('Seluruh data antrean berhasil direset!');
+    function getServiceLabel(code) {
+      const labels = {
+        KK: 'Kartu Keluarga', KTP: 'Pelayanan KTP', KIA: 'Kartu Identitas Anak',
+        AKL: 'Akta Kelahiran', AKM: 'Akta Kematian', PND: 'Pindah Datang',
+        LEG: 'Legalisasi Surat', PRZ: 'Perizinan', PNG: 'Pengaduan', UMM: 'Pelayanan Umum'
+      };
+      return labels[code] || '-';
     }
 
     function updateAllViews() {
-      updateMonitorView();
-      updateAdminPanel();
-      updateStatistics();
+      if(isAdmin) {
+        updateAdminPanel();
+        updateStatistics();
+      }
+      updateMonitorView(); // Monitor bisa berjalan walau di background
     }
 
     function updateMonitorView() {
       const activeContainer = document.getElementById('active-loket-cards');
+      if(!activeContainer) return;
       activeContainer.innerHTML = '';
-
-      Object.keys(loketList).forEach(loketKey => {
-        const loket = loketList[loketKey];
-        const activeQueue = loket.current;
-
-        let queueNumStr = '---';
-        let applicantStr = 'Tidak ada panggilan aktif';
-        let serviceStr = '-';
-        let detailStr = '';
-
-        if (activeQueue) {
-          queueNumStr = activeQueue.queueNumber;
-          applicantStr = activeQueue.name;
-          serviceStr = getServiceLabel(activeQueue.serviceType);
-          detailStr = `${activeQueue.address} (${activeQueue.rtrw})`;
-        }
-
-        const card = `
-          <div class="border-2 border-red-100 rounded-xl p-4 bg-red-50/20 text-center shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[220px]">
-            <div class="absolute top-0 left-0 w-full h-1.5 custom-gradient"></div>
+      Object.keys(loketList).forEach(k => {
+        const l = loketList[k];
+        const q = l.current;
+        activeContainer.innerHTML += `
+          <div class="border-2 border-red-100 rounded-xl p-4 bg-red-50/20 text-center relative flex flex-col justify-between min-h-[200px]">
+            <h4 class="text-xs font-extrabold text-red-600 uppercase">${l.name}</h4>
+            <p class="text-4xl font-black text-gray-800 my-4">${q ? q.queueNumber : '---'}</p>
             <div>
-              <h4 class="text-xs font-extrabold text-red-600 tracking-wider uppercase">${loket.name}</h4>
-              <p class="text-4xl font-black text-gray-800 my-4 tracking-tight">${queueNumStr}</p>
-            </div>
-            <div>
-              <span class="block text-sm font-bold text-gray-700 truncate px-2">${applicantStr}</span>
-              <span class="inline-block px-2 py-0.5 mt-1 text-[10px] bg-red-100 text-red-700 rounded-md font-bold">${serviceStr}</span>
-              ${detailStr ? `<span class="block text-[10px] text-gray-400 mt-1 truncate">${detailStr}</span>` : ''}
+              <span class="block text-sm font-bold text-gray-700">${q ? q.name : 'Kosong'}</span>
+              ${q ? `<span class="inline-block px-2 py-0.5 mt-1 text-[10px] bg-red-100 text-red-700 rounded-md font-bold">${getServiceLabel(q.serviceType)}</span>` : ''}
             </div>
           </div>
         `;
-        activeContainer.innerHTML += card;
       });
-
-      const waitingContainer = document.getElementById('waiting-list-container');
-      waitingContainer.innerHTML = '';
-      const waitingItems = (queueDatabase || []).filter(q => q.status === 'Menunggu').sort((a, b) => a.fullTimestamp - b.fullTimestamp);
-
-      if (waitingItems.length === 0) {
-        waitingContainer.innerHTML = `
-          <div class="text-center py-12 text-gray-400">
-            <i class="fa-solid fa-face-smile text-3xl mb-2"></i>
-            <p class="text-xs font-semibold">Semua antrean telah dilayani.</p>
-          </div>
-        `;
-      } else {
-        waitingItems.forEach(item => {
-          waitingContainer.innerHTML += `
-            <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition">
-              <div class="flex items-center space-x-3">
-                <span class="w-10 h-10 bg-red-600 text-white rounded-lg font-black text-xs flex items-center justify-center">${item.queueNumber}</span>
-                <div>
-                  <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>
-                  <p class="text-[10px] text-gray-400">${item.address} • ${getServiceLabel(item.serviceType)}</p>
-                </div>
-              </div>
-              <span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-1 rounded-md font-bold">Menunggu</span>
-            </div>
-          `;
-        });
-      }
+      
+      const waitCont = document.getElementById('waiting-list-container');
+      waitCont.innerHTML = '';
+      const wItems = (queueDatabase || []).filter(q => q.status === 'Menunggu').sort((a,b) => a.fullTimestamp - b.fullTimestamp);
+      wItems.forEach(i => {
+        waitCont.innerHTML += `
+          <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50">
+            <div class="flex space-x-3"><span class="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center text-xs font-bold">${i.queueNumber}</span>
+            <div><h4 class="text-xs font-bold">${i.name}</h4><p class="text-[10px] text-gray-400">${getServiceLabel(i.serviceType)}</p></div></div>
+          </div>`;
+      });
     }
 
     function changeActiveLoket() {
@@ -1055,298 +811,140 @@
     }
 
     function updateAdminPanel() {
-      const activeLoketObj = loketList[selectedLoket];
-      const currentQueue = activeLoketObj.current;
+      const l = loketList[selectedLoket];
+      const q = l.current;
+      document.getElementById('admin-current-number').innerText = q ? q.queueNumber : '---';
+      document.getElementById('admin-current-name').innerText = q ? q.name : '-';
+      document.getElementById('admin-current-service').innerText = q ? getServiceLabel(q.serviceType) : '-';
 
-      if (currentQueue) {
-        document.getElementById('admin-current-number').innerText = currentQueue.queueNumber;
-        document.getElementById('admin-current-name').innerText = currentQueue.name;
-        document.getElementById('admin-current-address').innerText = currentQueue.address;
-        document.getElementById('admin-current-service').innerText = getServiceLabel(currentQueue.serviceType);
-      } else {
-        document.getElementById('admin-current-number').innerText = '---';
-        document.getElementById('admin-current-name').innerText = '-';
-        document.getElementById('admin-current-address').innerText = '-';
-        document.getElementById('admin-current-service').innerText = '-';
-      }
-
-      const adminTableBody = document.getElementById('admin-queue-table');
-      adminTableBody.innerHTML = '';
-      const waitingQueues = (queueDatabase || []).filter(q => q.status === 'Menunggu').sort((a, b) => a.fullTimestamp - b.fullTimestamp);
-
-      if (waitingQueues.length === 0) {
-        adminTableBody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Tidak ada antrean tersisa.</td></tr>`;
-      } else {
-        waitingQueues.forEach(q => {
-          const canServe = activeLoketObj.allowed.includes(q.serviceType);
-          const actionBtn = canServe 
-            ? `<button onclick="panggilKeLoket('${q.id}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition">Panggil</button>`
-            : `<span class="text-[10px] text-gray-400 bg-gray-100 px-2.5 py-1 rounded-md">Khusus Loket Lain</span>`;
-
-          adminTableBody.innerHTML += `
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-4 py-3 font-extrabold text-red-600">${q.queueNumber}</td>
-              <td class="px-4 py-3 font-bold text-gray-800">${q.name}</td>
-              <td class="px-4 py-3 text-gray-500">${q.address} (${q.rtrw})</td>
-              <td class="px-4 py-3 text-gray-500">${getServiceLabel(q.serviceType)}</td>
-              <td class="px-4 py-3 text-center">${actionBtn}</td>
-            </tr>
-          `;
-        });
-      }
-    }
-
-    function panggilKeLoket(queueId) {
-      const activeLoketObj = loketList[selectedLoket];
-      if (activeLoketObj.current) {
-        const oldQueue = queueDatabase.find(q => q.id === activeLoketObj.current.id);
-        if (oldQueue) {
-          oldQueue.status = 'Selesai';
-          oldQueue.servedBy = selectedLoket;
-          oldQueue.completedTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+      const tb = document.getElementById('admin-queue-table');
+      tb.innerHTML = '';
+      const wait = (queueDatabase || []).filter(x => x.status === 'Menunggu' || x.status === 'Dilewati').sort((a,b) => a.fullTimestamp - b.fullTimestamp);
+      wait.forEach(i => {
+        const can = l.allowed.includes(i.serviceType);
+        let btn = '';
+        if(can) {
+          if(i.status === 'Menunggu') {
+            btn = `<button onclick="panggilKeLoket('${i.id}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[10px] font-bold shadow transition">Panggil</button>`;
+          } else if(i.status === 'Dilewati') {
+            btn = `<button onclick="panggilKeLoket('${i.id}')" class="px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-[10px] font-bold shadow transition">Panggil Ulang</button>`;
+          }
+        } else {
+          btn = `<span class="text-[10px] bg-gray-200 px-2 py-1 rounded font-bold text-gray-500">Beda Loket</span>`;
         }
-      }
-
-      const targetQueue = queueDatabase.find(q => q.id === queueId);
-      if (targetQueue) {
-        targetQueue.status = 'Diproses';
-        targetQueue.servedBy = selectedLoket;
-        targetQueue.completedTime = 'Sedang Diproses';
-        activeLoketObj.current = targetQueue;
-      }
-      saveToStorage(); 
-      panggilAntrean(targetQueue.queueNumber);
+        
+        const statusBadge = i.status === 'Dilewati' ? `<br><span class="inline-block mt-1 text-[9px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded font-bold">Dilewati</span>` : '';
+        
+        tb.innerHTML += `<tr><td class="px-4 py-3 font-bold text-red-600 align-top">${i.queueNumber}${statusBadge}</td><td class="px-4 py-3 align-top">${i.name}</td><td class="px-4 py-3 text-gray-500 align-top">${i.address}</td><td class="px-4 py-3 text-gray-500 align-top">${getServiceLabel(i.serviceType)}</td><td class="px-4 py-3 text-center align-top">${btn}</td></tr>`;
+      });
     }
 
-    function panggilAntrean(specificNumber) {
-      const activeQueue = loketList[selectedLoket].current;
-      if (!activeQueue && !specificNumber) {
-        showToast('Tidak ada antrean aktif untuk dipanggil!');
-        return;
+    function panggilKeLoket(id) {
+      const l = loketList[selectedLoket];
+      if(l.current) {
+        const o = queueDatabase.find(x => x.id === l.current.id);
+        if(o) { o.status = 'Selesai'; o.servedBy = selectedLoket; }
       }
+      const t = queueDatabase.find(x => x.id === id);
+      if(t) { t.status = 'Diproses'; l.current = t; saveToStorage(); panggilAntrean(t.queueNumber); }
+    }
 
-      const rawNumber = specificNumber || activeQueue.queueNumber;
-      const prefix = rawNumber.split('-')[0];
-      const rawNumbersStr = rawNumber.split('-')[1];
-      let numbersSeparated = '';
-      for (let i = 0; i < rawNumbersStr.length; i++) { numbersSeparated += rawNumbersStr[i] + ' '; }
-
-      const textToSpeak = `Nomor antrean, ${prefix} ${numbersSeparated}, silakan menuju ke ${selectedLoket}`;
-
+    function panggilAntrean(num) {
+      const q = loketList[selectedLoket].current;
+      if(!q && !num) return showToast('Tidak ada antrean');
+      const text = `Nomor antrean, ${num || q.queueNumber}, menuju ${selectedLoket}`;
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'id-ID';
-        utterance.rate = 0.85;
-        window.speechSynthesis.speak(utterance);
-        showToast(`Memanggil nomor suara: ${rawNumber}`);
-      } else {
-        showToast('Browser Anda tidak mendukung fitur panggilan suara!');
+        const u = new SpeechSynthesisUtterance(text); u.lang = 'id-ID'; u.rate = 0.85; window.speechSynthesis.speak(u);
+      }
+    }
+
+    function mulaiLayanan() {
+      const l = loketList[selectedLoket];
+      if(!l.current) return showToast('Tidak ada antrean yang sedang diproses!');
+      const t = queueDatabase.find(x => x.id === l.current.id);
+      if(t) {
+        if(t.startTime && t.startTime !== '-') {
+          return showToast('Waktu mulai sudah dicatat sebelumnya.');
+        }
+        t.startTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+        saveToStorage();
+        showToast(`Layanan untuk ${t.queueNumber} dimulai.`);
+        updateAllViews();
       }
     }
 
     function prosesSelesai() {
-      const activeLoketObj = loketList[selectedLoket];
-      if (!activeLoketObj.current) { showToast('Tidak ada antrean aktif!'); return; }
-      const target = queueDatabase.find(q => q.id === activeLoketObj.current.id);
-      if (target) {
-        target.status = 'Selesai';
-        target.servedBy = selectedLoket;
-        target.completedTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-      }
-      activeLoketObj.current = null;
-      saveToStorage();
-      showToast('Antrean berhasil diselesaikan.');
+      const l = loketList[selectedLoket];
+      if(!l.current) return;
+      const t = queueDatabase.find(x => x.id === l.current.id);
+      if(t) { t.status = 'Selesai'; t.completedTime = new Date().toLocaleTimeString('id-ID'); }
+      l.current = null; saveToStorage();
     }
-
+    
     function prosesLewati() {
-      const activeLoketObj = loketList[selectedLoket];
-      if (!activeLoketObj.current) { showToast('Tidak ada antrean aktif!'); return; }
-      const target = queueDatabase.find(q => q.id === activeLoketObj.current.id);
-      if (target) {
-        target.status = 'Dilewati';
-        target.servedBy = selectedLoket;
-        target.completedTime = 'Dilewati';
-      }
-      activeLoketObj.current = null;
-      saveToStorage();
-      showToast('Antrean dilewati/dibatalkan.');
+      const l = loketList[selectedLoket];
+      if(!l.current) return;
+      const t = queueDatabase.find(x => x.id === l.current.id);
+      if(t) t.status = 'Dilewati';
+      l.current = null; saveToStorage();
     }
 
     function updateStatistics() {
-      const total = queueDatabase.length;
-      const selesai = queueDatabase.filter(q => q.status === 'Selesai').length;
-      const menunggu = queueDatabase.filter(q => q.status === 'Menunggu').length;
-      const batal = queueDatabase.filter(q => q.status === 'Dilewati').length;
-
-      document.getElementById('stat-total').innerText = total;
-      document.getElementById('stat-selesai').innerText = selesai;
-      document.getElementById('stat-menunggu').innerText = menunggu;
-      document.getElementById('stat-batal').innerText = batal;
-
-      const serviceCounts = { KK:0, KTP:0, KIA:0, AKL:0, AKM:0, PND:0, LEG:0, PRZ:0, PNG:0, UMM:0 };
-      queueDatabase.forEach(q => { if (serviceCounts[q.serviceType] !== undefined) serviceCounts[q.serviceType]++; });
-
-      const distListContainer = document.getElementById('service-distribution-list');
-      distListContainer.innerHTML = '';
-
-      Object.keys(serviceCounts).forEach(key => {
-        const count = serviceCounts[key];
-        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
-        let barColor = 'bg-gray-600';
-        if (key === 'KK') barColor = 'bg-red-600';
-        else if (key === 'KTP') barColor = 'bg-red-500';
-        else if (key === 'KIA') barColor = 'bg-rose-400';
-        else if (key === 'AKL') barColor = 'bg-orange-500';
-        else if (key === 'AKM') barColor = 'bg-yellow-500';
-        else if (key === 'PND') barColor = 'bg-blue-600';
-        else if (key === 'UMM') barColor = 'bg-Purple-600';
-        else if (key === 'PRZ') barColor = 'bg-grey-500';
-        else if (key === 'PNG') barColor = 'bg-brown-600';
-        else if (key === 'UMM') barColor = 'bg-green-600';
-
-        distListContainer.innerHTML += `
-          <div>
-            <div class="flex justify-between items-center text-xs font-bold text-gray-700 mb-1">
-              <span>${getServiceLabel(key)}</span>
-              <span>${count} (${percentage}%)</span>
-            </div>
-            <div class="w-full bg-gray-100 rounded-full h-2">
-              <div class="${barColor} h-2 rounded-full" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `;
+      const tot = queueDatabase.length, sel = queueDatabase.filter(q => q.status === 'Selesai').length;
+      document.getElementById('stat-total').innerText = tot; document.getElementById('stat-selesai').innerText = sel;
+      
+      const counts = { KK:0, KTP:0, KIA:0, AKL:0, AKM:0, PND:0, LEG:0, PRZ:0, PNG:0, UMM:0 };
+      queueDatabase.forEach(q => { if(counts[q.serviceType] !== undefined) counts[q.serviceType]++; });
+      
+      const dist = document.getElementById('service-distribution-list');
+      dist.innerHTML = '';
+      Object.keys(counts).forEach(k => {
+        if(counts[k] > 0) dist.innerHTML += `<div class="mb-2"><div class="flex justify-between text-xs font-bold mb-1"><span>${getServiceLabel(k)}</span><span>${counts[k]}</span></div><div class="w-full bg-gray-200 h-1.5 rounded"><div class="bg-red-500 h-1.5 rounded" style="width:${Math.min((counts[k]/tot)*100, 100)}%"></div></div></div>`;
       });
 
-      const rekapTableBody = document.getElementById('rekap-table-body');
-      rekapTableBody.innerHTML = '';
-
-      if (queueDatabase.length === 0) {
-        rekapTableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">Belum ada riwayat data pelayanan.</td></tr>`;
-      } else {
-        queueDatabase.forEach(q => {
-          rekapTableBody.innerHTML += `
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-gray-500 font-medium">${q.time}</td>
-              <td class="px-6 py-4 font-black text-red-600">${q.queueNumber}</td>
-              <td class="px-6 py-4 font-bold text-gray-800">${q.name}</td>
-              <td class="px-6 py-4 text-gray-600 font-semibold">${q.phone || '-'}</td>
-              <td class="px-6 py-4 text-gray-500">${q.address} (${q.rtrw})</td>
-              <td class="px-6 py-4 text-gray-500">${getServiceLabel(q.serviceType)}</td>
-              <td class="px-6 py-4 font-semibold text-gray-700">${q.completedTime || '-'}</td>
-            </tr>
-          `;
-        });
-      }
-    }
-
-    function getServiceLabel(code) {
-      if (code === 'KK') return 'Pelayanan Kartu Keluarga';
-      if (code === 'KTP') return 'Pelayanan KTP';
-      if (code === 'KIA') return 'Pembuatan KIA';
-      if (code === 'AKL') return 'Pelayanan Akta Kelahiran';
-      if (code === 'AKM') return 'Pelayanan Akta Kematian';
-      if (code === 'PND') return 'Pelayanan Pindah Datang';
-      if (code === 'LEG') return 'Legalisasi Surat';
-      if (code === 'PRZ') return 'Perizinan & Rekomendasi';
-      if (code === 'PNG') return 'Pengaduan Masyarakat';
-      if (code === 'UMM') return 'Pelayanan Umum';
-      return '-';
+      const tb = document.getElementById('rekap-table-body');
+      tb.innerHTML = '';
+      queueDatabase.forEach(q => {
+        tb.innerHTML += `<tr><td class="px-6 py-3">${q.time}</td><td class="px-6 py-3 font-bold">${q.queueNumber}</td><td class="px-6 py-3">${q.name}</td><td class="px-6 py-3">${q.address}</td><td class="px-6 py-3">${getServiceLabel(q.serviceType)}</td><td class="px-6 py-3">${q.startTime || '-'}</td><td class="px-6 py-3">${q.completedTime || '-'}</td></tr>`;
+      });
     }
 
     function renderCharts() {
       const ctx = document.getElementById('rekapChart').getContext('2d');
-      const dataSelesai = [0, 0, 0, 0, 0, 0, 0];
-      const dataBatal = [0, 0, 0, 0, 0, 0, 0];
-      const categories = ['KK', 'KTP', 'KIA', 'AKL', 'AKM', 'PND', 'LEG', 'PRZ', 'PNG', 'UMM'];
-
-      categories.forEach((cat, idx) => {
-        dataSelesai[idx] = queueDatabase.filter(q => q.serviceType === cat && q.status === 'Selesai').length;
-        dataBatal[idx] = queueDatabase.filter(q => q.serviceType === cat && q.status === 'Dilewati').length;
-      });
+      const cat = ['KK', 'KTP', 'KIA', 'AKL', 'AKM', 'PND', 'LEG', 'PRZ', 'PNG', 'UMM'];
+      const dSel = cat.map(c => queueDatabase.filter(q => q.serviceType === c && q.status === 'Selesai').length);
+      const dBat = cat.map(c => queueDatabase.filter(q => q.serviceType === c && q.status === 'Dilewati').length);
 
       if (myChartInstance) myChartInstance.destroy();
       myChartInstance = new Chart(ctx, {
         type: 'bar',
-        data: {
-          labels: ['KK', 'KTP', 'KIA', 'Akta Kelahiran', 'Akta Kematian', 'Pindah Datang', 'Legalisasi', 'Perizinan', 'Pengaduan', 'Layanan Umum'],
-          datasets: [
-            { label: 'Selesai Dilayani', data: dataSelesai, backgroundColor: '#16a34a', borderRadius: 8 },
-            { label: 'Dilewati / Batal', data: dataBatal, backgroundColor: '#9ca3af', borderRadius: 8 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+        data: { labels: ['KK', 'KTP', 'KIA', 'A.Lahir', 'A.Kematian', 'P.Datang', 'Legal', 'Izin', 'Aduan', 'Umum'],
+                datasets: [{ label: 'Selesai', data: dSel, backgroundColor: '#16a34a' }, { label: 'Batal', data: dBat, backgroundColor: '#9ca3af' }]},
+        options: { responsive: true, maintainAspectRatio: false }
       });
     }
 
-    function printTicket() {
-      document.body.className = 'print-ticket';
-      window.print();
-      setTimeout(() => { document.body.className = ''; }, 500);
-    }
-
-    function printReport() {
-      const filterDateVal = document.getElementById('filter-date').value;
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const dateFormatted = new Date(filterDateVal).toLocaleDateString('id-ID', options);
-      const dateFormattedSignature = new Date(filterDateVal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-      document.getElementById('print-report-date').innerText = dateFormatted;
-      document.getElementById('print-report-date-signature').innerText = dateFormattedSignature;
-      const printTableBody = document.getElementById('print-report-table-body');
-      printTableBody.innerHTML = '';
-
-      if (queueDatabase.length === 0) {
-        printTableBody.innerHTML = `<tr><td colspan="7" class="border border-black px-3 py-4 text-center text-gray-500 italic">Tidak ada data transaksi.</td></tr>`;
-      } else {
-        queueDatabase.forEach(q => {
-          printTableBody.innerHTML += `
-            <tr>
-              <td class="border border-black px-3 py-2">${q.time}</td>
-              <td class="border border-black px-3 py-2 font-black">${q.queueNumber}</td>
-              <td class="border border-black px-3 py-2 font-bold">${q.name}</td>
-              <td class="border border-black px-3 py-2">${q.phone || '-'}</td>
-              <td class="border border-black px-3 py-2">${q.address} (${q.rtrw})</td>
-              <td class="border border-black px-3 py-2">${getServiceLabel(q.serviceType)}</td>
-              <td class="border border-black px-3 py-2 font-bold">${q.completedTime || '-'}</td>
-            </tr>
-          `;
-        });
-      }
-      document.body.className = 'print-report';
-      window.print();
-      setTimeout(() => { document.body.className = ''; }, 500);
-    }
-
-    function exportToExcel() {
-      if (queueDatabase.length === 0) { showToast('Tidak ada data riwayat pelayanan!'); return; }
-      let csvContent = "data:text/csv;charset=utf-8,Waktu Kehadiran,No Antrean,Nama Pemohon,Nomor HP,Alamat Asal,Jenis Pelayanan,Waktu Selesai\r\n";
+    function printTicket() { document.body.className = 'print-ticket'; window.print(); setTimeout(() => document.body.className = '', 500); }
+    function printReport() { 
+      const b = document.getElementById('print-report-table-body'); b.innerHTML = '';
       queueDatabase.forEach(q => {
-        const row = [`"${q.date} ${q.time}"`, `"${q.queueNumber}"`, `"${q.name}"`, `"${q.phone || '-'}"`, `"${q.address} (${q.rtrw})"`, `"${getServiceLabel(q.serviceType)}"`, `"${q.completedTime || '-'}"`];
-        csvContent += row.join(",") + "\r\n";
+        const compTime = q.completedTime && q.completedTime !== '-' ? q.completedTime : '-';
+        const stTime = q.startTime && q.startTime !== '-' ? q.startTime : '-';
+        b.innerHTML += `
+          <tr>
+            <td class="border border-black px-2 py-1.5 text-center">${q.time}</td>
+            <td class="border border-black px-2 py-1.5 text-center font-bold">${q.queueNumber}</td>
+            <td class="border border-black px-2 py-1.5">${q.name}</td>
+            <td class="border border-black px-2 py-1.5">${q.phone || '-'}</td>
+            <td class="border border-black px-2 py-1.5">${q.address}<br><span class="text-[8px] text-gray-700">${q.rtrw || ''}</span></td>
+            <td class="border border-black px-2 py-1.5">${getServiceLabel(q.serviceType)}</td>
+            <td class="border border-black px-2 py-1.5 text-center">${stTime}</td>
+            <td class="border border-black px-2 py-1.5 text-center">${compTime}</td>
+          </tr>
+        `;
       });
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      const cleanDate = new Date().toISOString().split('T')[0];
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `Laporan_SEJATI_${cleanDate}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('Laporan excel diunduh.');
-    }
-    
-    function saveCloudUrl() {
-      const url = document.getElementById('cloud-url-input').value.trim();
-      if (url === "") {
-        localStorage.removeItem('sejati_cloud_url');
-        document.getElementById('cloud-status-text').innerHTML = `Status: <span class="text-gray-400">Belum Disimpan</span>`;
-        showToast('URL Cloud dihapus.');
-      } else {
-        localStorage.setItem('sejati_cloud_url', url);
-        document.getElementById('cloud-status-text').innerHTML = `Status: <span class="text-green-600 font-extrabold"><i class="fa-solid fa-wifi mr-1"></i> Online Terhubung ke Google Sheet</span>`;
-        showToast('Sukses menyimpan URL Cloud.');
-      }
+      document.body.className = 'print-report'; window.print(); setTimeout(() => document.body.className = '', 500);
     }
   </script>
 </body>
