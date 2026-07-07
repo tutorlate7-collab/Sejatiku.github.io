@@ -8,7 +8,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Firebase SDK v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> <!-- Ditambahkan untuk Otentikasi -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
@@ -446,7 +448,6 @@
     
     <!-- SECTION CLOUD (ADMIN ONLY) -->
     <section id="section-panduan" class="tab-content hidden">
-        <!-- Kode cloud tetap sama, dihilangkan untuk menghemat baris agar fokus ke perbaikan -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden max-w-4xl mx-auto">
           <div class="custom-gradient text-white p-6">
             <h2 class="text-xl font-bold flex items-center"><i class="fa-solid fa-code mr-2"></i> Integrasi Cloud Backup</h2>
@@ -479,14 +480,15 @@
       
       <form onsubmit="doLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Username</label>
-          <input type="text" id="login-user" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none" placeholder="Masukkan username">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+          <!-- Mengubah dari Username menjadi type Email untuk menyesuaikan Firebase Auth -->
+          <input type="email" id="login-user" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none" placeholder="Masukkan email petugas">
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Password</label>
-          <input type="password" id="login-pass" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none" placeholder="Masukkan password">
+          <input type="password" id="login-pass" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none" placeholder="Masukkan password">
         </div>
-        <div id="login-error" class="hidden text-xs text-red-600 font-semibold text-center">Username atau Password salah!</div>
+        <div id="login-error" class="hidden text-xs text-red-600 font-semibold text-center">Autentikasi gagal!</div>
         
         <div class="flex space-x-3 mt-6">
           <button type="button" onclick="hideLoginModal()" class="w-1/2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold rounded-lg transition">Batal</button>
@@ -548,7 +550,7 @@
   </div>
 
   <script>
-    // 1. KONFIGURASI FIREBASE (Pertahankan kode asli)
+    // 1. KONFIGURASI FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyDqvJrraYWIUS5whpHEN2ynQVKyGAr0QFw",
       authDomain: "sejatijtr.firebaseapp.com",
@@ -560,17 +562,16 @@
     };
 
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(); // Inisialisasi Auth
     const database = firebase.database();
     const dbRef = database.ref('sejati_queue_v1');
 
-    // SISTEM LOGIN SEDERHANA
-    const ADMIN_USER = "admin";
-    const ADMIN_PASS = "rahasia123";
+    // SISTEM LOGIN MENGGUNAKAN FIREBASE AUTHENTICATION (Bukan Hardcoded)
     let isAdmin = false;
 
-    function checkAuth() {
-      const authStatus = sessionStorage.getItem('sejati_admin_auth');
-      if (authStatus === 'true') {
+    // Listener otomatis dari Firebase untuk mengecek status Login user
+    auth.onAuthStateChanged((user) => {
+      if (user) {
         isAdmin = true;
         document.getElementById('app-body').classList.add('is-admin');
         document.getElementById('btn-auth-login').classList.add('hidden');
@@ -580,8 +581,14 @@
         document.getElementById('app-body').classList.remove('is-admin');
         document.getElementById('btn-auth-login').classList.remove('hidden');
         document.getElementById('btn-auth-logout').classList.add('hidden');
+        
+        // Kembalikan ke tab ambil antrean jika bukan admin
+        const activeTab = document.querySelector('.tab-content.block');
+        if (activeTab && activeTab.id !== 'section-ambil') {
+          switchTab('ambil'); 
+        }
       }
-    }
+    });
 
     function showLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
     function hideLoginModal() { 
@@ -591,34 +598,35 @@
     
     function doLogin(e) {
       e.preventDefault();
-      const u = document.getElementById('login-user').value;
-      const p = document.getElementById('login-pass').value;
+      const email = document.getElementById('login-user').value;
+      const pass = document.getElementById('login-pass').value;
 
-      if (u === ADMIN_USER && p === ADMIN_PASS) {
-        sessionStorage.setItem('sejati_admin_auth', 'true');
-        checkAuth();
-        hideLoginModal();
-        document.getElementById('login-user').value = '';
-        document.getElementById('login-pass').value = '';
-        showToast('Login berhasil, akses petugas dibuka.');
-      } else {
-        document.getElementById('login-error').classList.remove('hidden');
-      }
+      // Login melalui Firebase Auth
+      auth.signInWithEmailAndPassword(email, pass)
+        .then((userCredential) => {
+          hideLoginModal();
+          document.getElementById('login-user').value = '';
+          document.getElementById('login-pass').value = '';
+          showToast('Login berhasil, akses petugas dibuka.');
+        })
+        .catch((error) => {
+          document.getElementById('login-error').innerText = 'Email atau Password salah!';
+          document.getElementById('login-error').classList.remove('hidden');
+        });
     }
 
     function doLogout() {
-      sessionStorage.removeItem('sejati_admin_auth');
-      checkAuth();
-      switchTab('ambil'); // Lempar kembali ke tab publik jika logout
-      showToast('Anda telah keluar.');
+      auth.signOut().then(() => {
+        showToast('Anda telah keluar.');
+      }).catch((error) => {
+        showToast('Gagal logout: ' + error.message);
+      });
     }
 
     // STATE UTAMA APP
     let queueDatabase = [];
-    // Ditambahkan AKM, AKL, PND ke struktur data
     let currentCounters = { KK: 0, KTP: 0, KIA: 0, AKM: 0, AKL: 0, PND: 0, LEG: 0, PRZ: 0, PNG: 0, UMM: 0 };
     let loketList = {
-      // Loket 1 menangani seluruh urusan Kependudukan
       'Loket 1': { name: 'Loket 1 (Kependudukan Lengkap)', current: null, allowed: ['KK', 'KTP', 'KIA', 'AKL', 'AKM', 'PND'] },
       'Loket 2': { name: 'Loket 2 (Legalisasi & Izin)', current: null, allowed: ['LEG', 'PRZ'] },
       'Loket 3': { name: 'Loket 3 (Layanan Umum & Pengaduan)', current: null, allowed: ['UMM', 'PNG'] }
@@ -627,7 +635,6 @@
     let myChartInstance = null;
 
     window.onload = function() {
-      checkAuth(); // Cek login saat refresh
       dbRef.on('value', (snapshot) => {
         const parsed = snapshot.val();
         if (parsed) {
@@ -672,7 +679,6 @@
     }
 
     function switchTab(tabId) {
-      // Keamanan Tambahan: Jika tab bukan 'ambil' dan user belum login, paksa login.
       if (tabId !== 'ambil' && !isAdmin) {
         showLoginModal();
         return;
@@ -770,7 +776,7 @@
         updateAdminPanel();
         updateStatistics();
       }
-      updateMonitorView(); // Monitor bisa berjalan walau di background
+      updateMonitorView(); 
     }
 
     function updateMonitorView() {
