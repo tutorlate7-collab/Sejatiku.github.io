@@ -46,15 +46,26 @@
       }
       body.print-ticket #printArea {
         position: absolute;
-        left: 50%;
+        left: 0;
         top: 0;
-        transform: translateX(-50%);
-        width: 100%;
-        max-width: 350px;
+        width: 100% !important;
+        max-width: 58mm !important; /* Paksa lebar kertas printer thermal 58mm */
+        margin: 0 !important;
+        padding: 5px !important;
         border: none !important;
         box-shadow: none !important;
         background: transparent !important;
+        box-sizing: border-box;
       }
+      /* Penyesuaian ukuran font untuk cetak thermal */
+      body.print-ticket #printArea #ticket-number {
+        font-size: 3rem !important;
+        margin: 0.25rem 0 !important;
+      }
+      body.print-ticket #printArea .ticket-dashed {
+        border-top: 1px dashed #000 !important;
+      }
+      
       body.print-report #reportPrintArea,
       body.print-report #reportPrintArea * {
         visibility: visible;
@@ -67,8 +78,8 @@
         display: block !important;
       }
       @page {
-        size: A4;
-        margin: 1.5cm;
+        size: auto;
+        margin: 0;
       }
     }
   </style>
@@ -109,11 +120,18 @@
           </button>
         </nav>
 
-        <div class="text-right flex items-center space-x-4">
+        <div class="text-right flex items-center space-x-2 sm:space-x-4">
           <div class="hidden lg:block">
             <p id="live-time" class="text-sm font-bold text-gray-800">Menunggu Waktu...</p>
             <p id="live-clock" class="text-xs text-red-600 font-semibold">--:--:--</p>
           </div>
+          
+          <!-- Tombol Pengaturan Printer -->
+          <button onclick="showPrinterModal()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition flex items-center space-x-1">
+            <i class="fa-solid fa-print"></i>
+            <span class="hidden sm:inline">Printer</span>
+          </button>
+
           <!-- Tombol Login / Logout -->
           <button id="btn-auth-login" onclick="showLoginModal()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-red-600 text-red-600 hover:bg-red-50 transition">
             <i class="fa-solid fa-lock mr-1"></i> Petugas
@@ -517,6 +535,57 @@
     </div>
   </div>
 
+  <!-- MODAL PENGATURAN PRINTER (NEW) -->
+  <div id="printerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100">
+      <div class="text-center mb-5">
+        <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fa-solid fa-print text-xl"></i>
+        </div>
+        <h3 class="text-lg font-extrabold text-gray-900">Pengaturan Printer</h3>
+        <p class="text-xs text-gray-500">Sesuaikan metode cetak struk antrean.</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Metode Cetak</label>
+          <select id="print-method-select" onchange="changePrintMethod()" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none">
+            <option value="system">Dialog Print Sistem (Default / Browser)</option>
+            <option value="rawbt">Aplikasi RawBT (Sangat Direkomendasikan di APK)</option>
+            <option value="bluetooth">Koneksi Bluetooth Langsung (Web Bluetooth)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Lebar Kertas</label>
+          <select id="paper-size-select" onchange="changePaperSize()" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none">
+            <option value="58">Printer Thermal 58mm</option>
+            <option value="80">Printer Thermal 80mm</option>
+          </select>
+        </div>
+
+        <!-- Panel Koneksi Bluetooth (Hanya muncul jika memilih bluetooth) -->
+        <div id="bluetooth-connect-panel" class="hidden p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <p class="text-[11px] font-semibold text-gray-600">Koneksi Web Bluetooth:</p>
+          <div id="printer-status" class="text-xs text-gray-400 mt-1 italic">Status: Belum Terhubung</div>
+          <button onclick="connectBluetoothPrinter()" class="w-full mt-2 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-md transition shadow flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-wifi"></i>
+            <span>Hubungkan Printer Bluetooth</span>
+          </button>
+        </div>
+
+        <button onclick="testPrint()" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition border border-gray-300 flex items-center justify-center space-x-1">
+          <i class="fa-solid fa-vial"></i>
+          <span>Cetak Uji Coba (Test Print)</span>
+        </button>
+        
+        <div class="flex space-x-2 mt-5 pt-3 border-t border-gray-100">
+          <button onclick="hidePrinterModal()" class="w-full py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition text-center">Selesai</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 transform translate-y-20 opacity-0 transition-all duration-300">
     <span class="p-1 bg-red-600 rounded text-white"><i class="fa-solid fa-circle-info"></i></span>
     <span id="toast-msg">Pesan</span>
@@ -634,6 +703,12 @@
     let selectedLoket = 'Loket 1';
     let myChartInstance = null;
 
+    // STATE DAN CONFIG PRINTER (NEW)
+    let printMethod = localStorage.getItem('sejati_print_method') || 'system';
+    let paperSize = localStorage.getItem('sejati_paper_size') || '58';
+    let printerDevice = null;
+    let printerCharacteristic = null;
+
     window.onload = function() {
       dbRef.on('value', (snapshot) => {
         const parsed = snapshot.val();
@@ -652,6 +727,11 @@
         updateAllViews();
       });
       startClock();
+      
+      // Sinkronkan nilai input printer modal
+      document.getElementById('print-method-select').value = printMethod;
+      document.getElementById('paper-size-select').value = paperSize;
+      toggleBluetoothPanel();
     };
 
     function saveToStorage() {
@@ -745,6 +825,11 @@
 
       document.getElementById('queueForm').reset();
       showToast(`Antrean ${queueNumber} berhasil dibuat!`);
+
+      // Cetak Otomatis jika printer bluetooth terhubung atau menggunakan RawBT
+      if (printMethod !== 'system') {
+        setTimeout(() => { printTicket(); }, 800);
+      }
     }
 
     function showToast(msg) {
@@ -931,7 +1016,6 @@
       });
     }
 
-    function printTicket() { document.body.className = 'print-ticket'; window.print(); setTimeout(() => document.body.className = '', 500); }
     function printReport() { 
       const b = document.getElementById('print-report-table-body'); b.innerHTML = '';
       queueDatabase.forEach(q => {
@@ -951,6 +1035,276 @@
         `;
       });
       document.body.className = 'print-report'; window.print(); setTimeout(() => document.body.className = '', 500);
+    }
+
+    // ==========================================
+    // BAGIAN LOGIK BARU: SISTEM CETAK THERMAL
+    // ==========================================
+    
+    function showPrinterModal() {
+      document.getElementById('printerModal').classList.remove('hidden');
+    }
+
+    function hidePrinterModal() {
+      document.getElementById('printerModal').classList.add('hidden');
+    }
+
+    function toggleBluetoothPanel() {
+      const panel = document.getElementById('bluetooth-connect-panel');
+      if (printMethod === 'bluetooth') {
+        panel.classList.remove('hidden');
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
+
+    function changePrintMethod() {
+      printMethod = document.getElementById('print-method-select').value;
+      localStorage.setItem('sejati_print_method', printMethod);
+      toggleBluetoothPanel();
+      showToast(`Metode cetak diubah ke: ${printMethod.toUpperCase()}`);
+    }
+
+    function changePaperSize() {
+      paperSize = document.getElementById('paper-size-select').value;
+      localStorage.setItem('sejati_paper_size', paperSize);
+      showToast(`Ukuran kertas diatur ke: ${paperSize}mm`);
+    }
+
+    // Fungsi pencarian & koneksi langsung ke Bluetooth Printer (Web Bluetooth)
+    async function connectBluetoothPrinter() {
+      if (!navigator.bluetooth) {
+        showToast("Peramban / WebView ini tidak mendukung Web Bluetooth.");
+        return;
+      }
+      try {
+        showToast("Mencari printer bluetooth...");
+        printerDevice = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [
+            '000018f0-0000-1000-8000-00805f9b34fb', // Standard thermal printer service
+            '00001101-0000-1000-8000-00805f9b34fb', // Serial SPP
+            'e7810a71-73ae-499d-8c15-faa9ae90611a'
+          ]
+        });
+
+        document.getElementById('printer-status').innerText = `Menghubungkan ke ${printerDevice.name}...`;
+        const server = await printerDevice.gatt.connect();
+        
+        let service;
+        const knownServices = ['000018f0-0000-1000-8000-00805f9b34fb', '00001101-0000-1000-8000-00805f9b34fb', 'e7810a71-73ae-499d-8c15-faa9ae90611a'];
+        for (let uuid of knownServices) {
+          try {
+            service = await server.getPrimaryService(uuid);
+            if (service) break;
+          } catch(e) {}
+        }
+
+        if (!service) {
+          throw new Error("Layanan GATT Printer tidak terdeteksi!");
+        }
+
+        const characteristics = await service.getCharacteristics();
+        printerCharacteristic = characteristics.find(c => c.properties.write || c.properties.writeWithoutResponse);
+
+        if (!printerCharacteristic) {
+          throw new Error("Karakteristik Write tidak ditemukan pada printer.");
+        }
+
+        document.getElementById('printer-status').innerText = `Terhubung ke: ${printerDevice.name}`;
+        document.getElementById('printer-status').className = "text-xs text-green-600 font-bold mt-2";
+        showToast("Printer Bluetooth berhasil terhubung!");
+      } catch (err) {
+        console.error(err);
+        document.getElementById('printer-status').innerText = `Koneksi gagal!`;
+        document.getElementById('printer-status').className = "text-xs text-red-600 font-bold mt-2";
+        showToast("Gagal terhubung: " + err.message);
+      }
+    }
+
+    // Mengirim byte data ke printer bluetooth secara berurutan dalam chunk 20 bytes (limit MTU Bluetooth)
+    async function sendBytesToPrinter(bytes) {
+      if (!printerCharacteristic) {
+        showToast("Hubungkan ke printer Bluetooth terlebih dahulu!");
+        return;
+      }
+      const chunkSize = 20;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.slice(i, i + chunkSize);
+        await printerCharacteristic.writeValue(chunk);
+      }
+    }
+
+    // Membuat raw command ESC/POS thermal printer untuk nomor antrean
+    function buildEscPosBytes(q) {
+      const encoder = new TextEncoder();
+      
+      const ESC = 0x1B;
+      const GS = 0x1D;
+      
+      const init = [ESC, 0x40]; // Inisialisasi printer
+      const center = [ESC, 0x61, 0x01]; // Rata Tengah
+      const left = [ESC, 0x61, 0x00]; // Rata Kiri
+      const boldOn = [ESC, 0x45, 0x01]; // Tebal On
+      const boldOff = [ESC, 0x45, 0x00]; // Tebal Off
+      
+      // Ukuran Karakter (Double Width & Double Height untuk Nomor Tiket)
+      const sizeLarge = [GS, 0x21, 0x11]; 
+      const sizeNormal = [GS, 0x21, 0x00];
+      
+      const feedPaper = [ESC, 0x64, 0x04]; // Feed kertas 4 baris
+      const cutPaper = [GS, 0x56, 0x41, 0x03]; // Potong Kertas otomatis (jika disupport printer)
+
+      let bytes = [];
+      const append = (arr) => bytes.push(...arr);
+      const appendStr = (str) => bytes.push(...encoder.encode(str + "\n"));
+
+      append(init);
+      append(center);
+      append(boldOn);
+      appendStr("PEMERINTAH KAB. LUMAJANG");
+      appendStr("KECAMATAN JATIROTO");
+      append(boldOff);
+      appendStr("Jln Gajah Mada No 02 Jatiroto");
+      appendStr("--------------------------------");
+      appendStr("");
+      appendStr("NOMOR ANTREAN ANDA:");
+      append(sizeLarge);
+      append(boldOn);
+      appendStr(q.queueNumber);
+      append(sizeNormal);
+      append(boldOff);
+      appendStr("");
+      append(boldOn);
+      appendStr(getServiceLabel(q.serviceType).toUpperCase());
+      append(boldOff);
+      appendStr("--------------------------------");
+      append(left);
+      appendStr(`Nama    : ${q.name}`);
+      appendStr(`Alamat  : ${q.address}`);
+      appendStr(`Waktu   : ${q.time}`);
+      appendStr(`Tanggal : ${q.date}`);
+      appendStr("--------------------------------");
+      append(center);
+      appendStr("Mohon menunggu hingga dipanggil.");
+      appendStr("Terima kasih.");
+      appendStr("");
+      append(feedPaper);
+      append(cutPaper);
+
+      return new Uint8Array(bytes);
+    }
+
+    // Mengirim data cetak melalui Android Intent ke aplikasi RawBT
+    function printViaRawBT(q) {
+      // Format teks khusus dengan markup tag RawBT
+      const text = `
+[C]<b>PEMERINTAH KAB. LUMAJANG</b>
+[C]<b>KECAMATAN JATIROTO</b>
+[C]Jln Gajah Mada No 02 Jatiroto
+[C]--------------------------------
+[C]NOMOR ANTREAN ANDA:
+[C]<font size="big"><b>${q.queueNumber}</b></font>
+
+[C]<b>${getServiceLabel(q.serviceType).toUpperCase()}</b>
+[C]--------------------------------
+[L]Nama    : ${q.name}
+[L]Alamat  : ${q.address}
+[L]Waktu   : ${q.time}
+[L]Tanggal : ${q.date}
+[C]--------------------------------
+[C]Mohon menunggu hingga dipanggil.
+[C]Terima kasih.
+
+
+`;
+      // Android Intent URI Scheme untuk memanggil aplikasi RawBT dari webview/browser
+      const url = `intent:#Intent;scheme=rawbt;package=ru.a2011.btrprint;S.text=${encodeURIComponent(text)};end;`;
+      window.location.href = url;
+    }
+
+    // Fungsi Utama Eksekusi Cetak Tiket
+    function printTicket() {
+      const queueNumber = document.getElementById('ticket-number').innerText;
+      if (queueNumber === '---') {
+        showToast("Silakan isi formulir untuk mendapatkan antrean terlebih dahulu.");
+        return;
+      }
+
+      const q = queueDatabase.find(item => item.queueNumber === queueNumber);
+      if (!q) {
+        showToast("Data antrean tidak ditemukan.");
+        return;
+      }
+
+      if (printMethod === 'bluetooth') {
+        if (!printerCharacteristic) {
+          showToast("Printer Bluetooth belum tersambung. Mencoba print via sistem...");
+          printViaSystem();
+          return;
+        }
+        const bytes = buildEscPosBytes(q);
+        sendBytesToPrinter(bytes)
+          .then(() => showToast("Mencetak tiket via Bluetooth..."))
+          .catch(err => {
+            console.error(err);
+            showToast("Koneksi terputus. Mencoba cetak lewat sistem.");
+            printViaSystem();
+          });
+      } else if (printMethod === 'rawbt') {
+        printViaRawBT(q);
+      } else {
+        printViaSystem();
+      }
+    }
+
+    function printViaSystem() {
+      document.body.className = 'print-ticket';
+      window.print();
+      setTimeout(() => { document.body.className = ''; }, 500);
+    }
+
+    // Cetak uji coba untuk memastikan printer bekerja dengan baik
+    function testPrint() {
+      const testData = {
+        queueNumber: "X-999",
+        name: "UJI COBA PRINTER",
+        address: "Jatiroto, Lumajang",
+        time: new Date().toLocaleTimeString('id-ID'),
+        date: new Date().toLocaleDateString('id-ID'),
+        serviceType: "UMM"
+      };
+
+      if (printMethod === 'bluetooth') {
+        if (!printerCharacteristic) {
+          showToast("Printer Bluetooth tidak aktif / terhubung!");
+          return;
+        }
+        const bytes = buildEscPosBytes(testData);
+        sendBytesToPrinter(bytes).then(() => showToast("Test print dikirim!"));
+      } else if (printMethod === 'rawbt') {
+        printViaRawBT(testData);
+      } else {
+        // Test cetak sistem biasa
+        const oldNum = document.getElementById('ticket-number').innerText;
+        const oldSrv = document.getElementById('ticket-service-name').innerText;
+        const oldApp = document.getElementById('ticket-applicant').innerText;
+        const oldAdr = document.getElementById('ticket-address').innerText;
+        
+        document.getElementById('ticket-number').innerText = "X-999";
+        document.getElementById('ticket-service-name').innerText = "TEST CETAK PRINTER";
+        document.getElementById('ticket-applicant').innerText = "PENGUJIAN SISTEM";
+        document.getElementById('ticket-address').innerText = "Jatiroto";
+        
+        printViaSystem();
+        
+        setTimeout(() => {
+          document.getElementById('ticket-number').innerText = oldNum;
+          document.getElementById('ticket-service-name').innerText = oldSrv;
+          document.getElementById('ticket-applicant').innerText = oldApp;
+          document.getElementById('ticket-address').innerText = oldAdr;
+        }, 1000);
+      }
     }
   </script>
 </body>
